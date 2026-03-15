@@ -35,7 +35,7 @@ export default function AllServicesContent() {
         <div
           className={clsx(
             "md:hidden sticky top-header-mobile z-10",
-            "bg-gray-50 dark:bg-zinc-950 py-3 mb-6 -mx-4 px-4"
+            "py-3 mb-6 -mx-4 px-4"
           )}
         >
           <div className="overflow-x-auto scrollbar-hide pb-2">
