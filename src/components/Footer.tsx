@@ -35,7 +35,7 @@ export default function Footer() {
               </li>
               <li>
                 <a 
-                  href="#"
+                  href="/find-task"
                   className="text-sm md:text-base text-gray-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors duration-200 font-sans inline-block hover:translate-x-1 transition-transform"
                 >
                   Գտնել առաջադրանք
