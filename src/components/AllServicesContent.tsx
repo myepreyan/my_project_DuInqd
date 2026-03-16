@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import { categories } from "@/data/categories";
 import CategoryButton from "@/components/CategoryButton";
@@ -8,6 +9,7 @@ import SubcategoryButton from "@/components/SubcategoryButton";
 import { LAYOUT, PILL_GAPS } from "@/constants/layout";
 
 export default function AllServicesContent() {
+  const router = useRouter();
   const [activeCategory, setActiveCategory] = useState(categories[0].id);
 
   const activeCategoryData = useMemo(
@@ -16,8 +18,7 @@ export default function AllServicesContent() {
   );
 
   const handleSubcategoryClick = (subcategoryId: string, subcategoryName: string) => {
-    console.log("Ստեղծել առաջադրանք:", { subcategoryId, subcategoryName });
-    // TODO: Navigate to create task page
+    router.push(`/create-task/${subcategoryId}?category=${activeCategory}`);
   };
 
   return (
