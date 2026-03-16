@@ -20,7 +20,7 @@ export default function ServicesSection() {
   ];
 
   return (
-    <section className="w-full bg-gray-50 dark:bg-zinc-950">
+    <section id="services" className="w-full bg-gray-50 dark:bg-zinc-950">
       <div className="max-w-7xl mx-auto px-6 py-8 md:py-16">
         {/* Title */}
         <h2 className="text-3xl md:text-4xl font-bold text-center text-black dark:text-white font-serif mb-8 md:mb-12">
