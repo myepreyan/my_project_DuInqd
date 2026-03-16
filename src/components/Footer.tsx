@@ -27,7 +27,7 @@ export default function Footer() {
             <ul className="space-y-2 md:space-y-3">
               <li>
                 <a 
-                  href="#"
+                  href="/all-services"
                   className="text-sm md:text-base text-gray-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors duration-200 font-sans inline-block hover:translate-x-1 transition-transform"
                 >
                   Ստեղծել առաջադրանք
