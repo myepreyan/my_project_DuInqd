@@ -2,14 +2,31 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { categories } from "@/data/categories";
 
 export default function HeroSection() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isSticky, setIsSticky] = useState(false);
+  const [randomSubcategories, setRandomSubcategories] = useState<string[]>([]);
   const searchBarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const allSubcategories = categories.flatMap(cat => 
+      cat.subcategories
+        .filter(sub => sub.name !== "Այլ")
+        .map(sub => sub.name)
+    );
+    const shuffled = [...allSubcategories].sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, 1);
+    setRandomSubcategories(selected);
+  }, []);
 
   const handleSearch = () => {
     console.log("Որոնել:", searchQuery);
+  };
+
+  const handleExampleClick = (subcategoryName: string) => {
+    setSearchQuery(subcategoryName);
   };
 
   useEffect(() => {
@@ -74,9 +91,15 @@ export default function HeroSection() {
                 <span className="text-xs sm:text-sm text-gray-600 dark:text-zinc-400 font-sans">
                   Օրինակ՝
                 </span>
-                <button className="px-3 sm:px-5 py-1.5 sm:py-2 bg-purple-100 hover:bg-purple-200 dark:bg-purple-900/30 dark:hover:bg-purple-900/50 text-purple-700 dark:text-purple-300 font-medium rounded-full text-xs sm:text-sm transition-colors duration-200 active:scale-95 font-sans">
-                  Անիմատոր
-                </button>
+                {randomSubcategories.map((subcategory, index) => (
+                  <button 
+                    key={index}
+                    onClick={() => handleExampleClick(subcategory)}
+                    className="px-3 sm:px-5 py-1.5 sm:py-2 bg-purple-100 hover:bg-purple-200 dark:bg-purple-900/30 dark:hover:bg-purple-900/50 text-purple-700 dark:text-purple-300 font-medium rounded-full text-xs sm:text-sm transition-colors duration-200 active:scale-95 font-sans"
+                  >
+                    {subcategory}
+                  </button>
+                ))}
               </div>
             </div>
 
