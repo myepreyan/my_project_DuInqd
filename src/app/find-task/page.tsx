@@ -4,8 +4,24 @@ import { useState } from "react";
 import FindTaskContent from "@/components/FindTaskContent";
 
 export default function FindTaskPage() {
+  const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const handleSearch = () => {
+    setSearchQuery(searchInput);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  const handleClear = () => {
+    setSearchInput("");
+    setSearchQuery("");
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 pt-[35px] md:pt-[60px] pb-16">
@@ -36,14 +52,32 @@ export default function FindTaskPage() {
           </svg>
 
           {/* Search Input Field */}
-          <div className="flex-1">
+          <div className="flex-1 relative">
             <input
               type="text"
               placeholder="Որոնել առաջադրանքներ..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-2 py-2 text-base bg-transparent border-none focus:outline-none text-black dark:text-white placeholder-gray-400 dark:placeholder-zinc-500"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyPress={handleKeyPress}
+              className="w-full px-2 py-2 pr-8 text-base bg-transparent border-none focus:outline-none text-black dark:text-white placeholder-gray-400 dark:placeholder-zinc-500"
             />
+            {searchInput && (
+              <button
+                onClick={handleClear}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full transition-colors"
+                aria-label="Մաքրել որոնումը"
+              >
+                <svg
+                  className="w-4 h-4 text-gray-400 dark:text-zinc-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
           </div>
 
           {/* Mobile Filter Button */}
@@ -65,6 +99,7 @@ export default function FindTaskPage() {
 
           {/* Search Button */}
           <button
+            onClick={handleSearch}
             className="px-5 py-2 bg-lime-500 hover:bg-lime-600 text-white font-medium rounded-lg transition-colors duration-200 active:scale-95"
           >
             Գտնել

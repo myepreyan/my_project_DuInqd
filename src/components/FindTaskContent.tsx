@@ -37,13 +37,26 @@ export default function FindTaskContent({ searchQuery, isSidebarOpen, setIsSideb
 
     // Filter by search query
     if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (task) =>
+      const query = searchQuery.toLowerCase().trim();
+      
+      filtered = filtered.filter((task) => {
+        const category = categories.find(c => c.id === task.categoryId);
+        const categoryName = category?.name.toLowerCase() || '';
+        
+        const subcategory = category?.subcategories.find(
+          s => s.id === task.subcategoryId
+        );
+        const subcategoryName = subcategory?.name.toLowerCase() || '';
+        
+        return (
           task.title.toLowerCase().includes(query) ||
           task.description.toLowerCase().includes(query) ||
-          task.tag.toLowerCase().includes(query)
-      );
+          task.tag.toLowerCase().includes(query) ||
+          (task.location && task.location.toLowerCase().includes(query)) ||
+          categoryName.includes(query) ||
+          subcategoryName.includes(query)
+        );
+      });
     }
 
     return filtered;

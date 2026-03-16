@@ -63,7 +63,7 @@ export default function HeroSection() {
                 />
                 <button
                   onClick={handleSearch}
-                  className="px-3 sm:px-8 py-3 sm:py-4 bg-green-500 hover:bg-green-600 text-white font-semibold transition-colors duration-200 active:scale-95 font-sans text-sm sm:text-base"
+                  className="px-3 sm:px-8 py-3 sm:py-4 bg-[#82d134] hover:bg-[#73bc2a] text-white font-semibold transition-colors duration-200 active:scale-95 font-sans text-sm sm:text-base"
                 >
                   Գտնել
                 </button>
@@ -94,7 +94,7 @@ export default function HeroSection() {
                   />
                   <button
                     onClick={handleSearch}
-                    className="px-3 sm:px-8 py-3 sm:py-4 bg-green-500 hover:bg-green-600 text-white font-semibold transition-colors duration-200 active:scale-95 font-sans text-sm sm:text-base"
+                    className="px-3 sm:px-8 py-3 sm:py-4 bg-[#82d134] hover:bg-[#73bc2a] text-white font-semibold transition-colors duration-200 active:scale-95 font-sans text-sm sm:text-base"
                   >
                     Գտնել
                   </button>
