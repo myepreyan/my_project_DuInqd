@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useTaskFormStore } from '@/store/useTaskFormStore';
 import StepIndicator from '@/components/create-task/StepIndicator';
@@ -15,7 +15,8 @@ import Step7Review from '@/components/create-task/Step7Review';
 export default function CreateTaskPage() {
   const params = useParams();
   const searchParams = useSearchParams();
-  const { currentStep, updateFormData } = useTaskFormStore();
+  const router = useRouter();
+  const { currentStep, updateFormData, resetForm } = useTaskFormStore();
   
   const subcategoryId = params.subcategoryId as string;
   const categoryId = searchParams.get('category');
@@ -28,6 +29,24 @@ export default function CreateTaskPage() {
       });
     }
   }, [subcategoryId, categoryId, updateFormData]);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      const isLeavingToOtherPage = !window.location.pathname.includes('/create-task');
+      if (isLeavingToOtherPage) {
+        resetForm();
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      if (!window.location.pathname.includes('/create-task')) {
+        resetForm();
+      }
+    };
+  }, [resetForm]);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 py-8">
