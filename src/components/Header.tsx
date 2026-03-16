@@ -2,15 +2,30 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTaskFormStore } from "@/store/useTaskFormStore";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
+  const { resetForm } = useTaskFormStore();
 
   const handleCreateTask = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
+    resetForm();
     router.push('/all-services');
     setIsMenuOpen(false);
+  };
+
+  const handleFindTask = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    resetForm();
+    router.push('/find-task');
+    setIsMenuOpen(false);
+  };
+
+  const handleLogoClick = () => {
+    resetForm();
+    router.push('/');
   };
 
   return (
@@ -19,7 +34,7 @@ export default function Header() {
         {/* Left side - Search Icon */}
         <div className="flex items-center">
           <button 
-            onClick={() => router.push('/')}
+            onClick={handleLogoClick}
             aria-label="Գլխավոր"
             className="group relative rounded-xl transition-all duration-300 ease-out hover:bg-black/[.06] dark:hover:bg-white/[.08] hover:scale-105 active:scale-95"
           >
@@ -42,6 +57,7 @@ export default function Header() {
           </a>
           <a
             href="/find-task"
+            onClick={handleFindTask}
             className="relative text-sm font-medium text-black/70 dark:text-white/70 transition-all duration-300 hover:text-black dark:hover:text-white hover:scale-105 active:scale-95 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-black dark:after:bg-white after:transition-all after:duration-300 hover:after:w-full"
           >
             Գտնել առաջադրանք
@@ -94,7 +110,7 @@ export default function Header() {
           </a>
           <a
             href="/find-task"
-            onClick={() => setIsMenuOpen(false)}
+            onClick={handleFindTask}
             className="w-full px-6 py-3 text-sm font-medium text-black dark:text-white bg-black/[.04] dark:bg-white/[.06] hover:bg-black/[.08] dark:hover:bg-white/[.12] rounded-full text-center transition-all duration-200 active:scale-95"
           >
             Գտնել առաջադրանք
