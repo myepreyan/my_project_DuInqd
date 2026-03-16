@@ -14,24 +14,14 @@ export default function Header() {
         <div className="flex items-center">
           <button 
             onClick={() => router.push('/')}
-            aria-label="Որոնում"
-            className="group relative p-2.5 rounded-xl transition-all duration-300 ease-out hover:bg-black/[.06] dark:hover:bg-white/[.08] hover:scale-105 active:scale-95"
+            aria-label="Գլխավոր"
+            className="group relative rounded-xl transition-all duration-300 ease-out hover:bg-black/[.06] dark:hover:bg-white/[.08] hover:scale-105 active:scale-95"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-black/80 dark:text-white/80 transition-all duration-300 group-hover:text-black dark:group-hover:text-white group-hover:rotate-12"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.35-4.35" />
-            </svg>
+            <img 
+              src="/duinqd_logo.svg" 
+              alt="Duinqd Logo" 
+              className="h-10 w-auto transition-all duration-300 group-hover:rotate-12"
+            />
           </button>
         </div>
 
