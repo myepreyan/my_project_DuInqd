@@ -44,7 +44,7 @@ export default function Header() {
             Ստեղծել առաջադրանք
           </a>
           <a
-            href="#"
+            href="/find-task"
             className="relative text-sm font-medium text-black/70 dark:text-white/70 transition-all duration-300 hover:text-black dark:hover:text-white hover:scale-105 active:scale-95 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-black dark:after:bg-white after:transition-all after:duration-300 hover:after:w-full"
           >
             Գտնել առաջադրանք
@@ -96,7 +96,8 @@ export default function Header() {
             Ստեղծել առաջադրանք
           </a>
           <a
-            href="#"
+            href="/find-task"
+            onClick={() => setIsMenuOpen(false)}
             className="w-full px-6 py-3 text-sm font-medium text-black dark:text-white bg-black/[.04] dark:bg-white/[.06] hover:bg-black/[.08] dark:hover:bg-white/[.12] rounded-full text-center transition-all duration-200 active:scale-95"
           >
             Գտնել առաջադրանք
