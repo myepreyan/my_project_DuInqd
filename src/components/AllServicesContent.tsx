@@ -7,9 +7,11 @@ import { categories } from "@/data/categories";
 import CategoryButton from "@/components/CategoryButton";
 import SubcategoryButton from "@/components/SubcategoryButton";
 import { LAYOUT, PILL_GAPS } from "@/constants/layout";
+import { useTaskFormStore } from "@/store/useTaskFormStore";
 
 export default function AllServicesContent() {
   const router = useRouter();
+  const { resetForm } = useTaskFormStore();
   const [activeCategory, setActiveCategory] = useState(categories[0].id);
 
   const activeCategoryData = useMemo(
@@ -18,6 +20,7 @@ export default function AllServicesContent() {
   );
 
   const handleSubcategoryClick = (subcategoryId: string, subcategoryName: string) => {
+    resetForm();
     router.push(`/create-task/${subcategoryId}?category=${activeCategory}`);
   };
 
