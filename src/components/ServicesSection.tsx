@@ -2,21 +2,21 @@ import Link from "next/link";
 
 export default function ServicesSection() {
   const services = [
-    { id: 1, icon: "🚀", name: "Կուրյերական ծառայություններ" },
-    { id: 2, icon: "🔨", name: "Վերանորոգում և շինարարություն" },
-    { id: 3, icon: "📦", name: "Բեռնափոխադրումներ" },
-    { id: 4, icon: "🧹", name: "Տնային տնտեսություն և մաքրություն" },
-    { id: 5, icon: "💻", name: "Համակարգչային օգնություն" },
-    { id: 6, icon: "📸", name: "Ֆոտո, վիդեո և աուդիո" },
-    { id: 7, icon: "💾", name: "Ծրագրավորում" },
-    { id: 8, icon: "⚙️", name: "Տեխնիկայի տեղադրում և վերանորոգում" },
-    { id: 9, icon: "🎉", name: "Միջոցառումներ և առաջխաղացումներ" },
-    { id: 10, icon: "🎨", name: "Դիզայն" },
-    { id: 11, icon: "🤝", name: "Վիրտուալ օգնական" },
-    { id: 12, icon: "🔧", name: "Թվային տեխնիկայի վերանորոգում" },
-    { id: 13, icon: "💅", name: "Գեղեցկություն և առողջություն" },
-    { id: 14, icon: "🚗", name: "Տրանսպորտի վերանորոգում" },
-    { id: 15, icon: "📚", name: "Կրկնուսույցներ և ուսուցում" },
+    { id: "courier", icon: "🚀", name: "Կուրյերական ծառայություններ" },
+    { id: "renovation", icon: "🔨", name: "Վերանորոգում և շինարարություն" },
+    { id: "cargo", icon: "📦", name: "Բեռնափոխադրումներ" },
+    { id: "cleaning", icon: "🧹", name: "Տնային տնտեսություն և մաքրություն" },
+    { id: "computer", icon: "💻", name: "Համակարգչային օգնություն" },
+    { id: "photo-video", icon: "📸", name: "Ֆոտո, վիդեո և աուդիո" },
+    { id: "programming", icon: "💾", name: "Ծրագրավորում" },
+    { id: "tech-install", icon: "⚙️", name: "Տեխնիկայի տեղադրում և վերանորոգում" },
+    { id: "events", icon: "🎉", name: "Միջոցառումներ և առաջխաղացումներ" },
+    { id: "design", icon: "🎨", name: "Դիզայն" },
+    { id: "virtual-assistant", icon: "🤝", name: "Վիրտուալ օգնական" },
+    { id: "digital-repair", icon: "🔧", name: "Թվային տեխնիկայի վերանորոգում" },
+    { id: "beauty", icon: "💅", name: "Գեղեցկություն և առողջություն" },
+    { id: "auto-repair", icon: "🚗", name: "Տրանսպորտի վերանորոգում" },
+    { id: "tutoring", icon: "📚", name: "Կրկնուսույցներ և ուսուցում" },
   ];
 
   return (
@@ -30,15 +30,14 @@ export default function ServicesSection() {
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 mb-12">
           {services.map((service) => (
-            <div
-              key={service.id}
-              className="flex flex-row items-center gap-2 md:gap-3 p-2.5 md:p-4 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg md:rounded-xl shadow-sm hover:shadow-md hover:scale-105 transition-all duration-200 cursor-pointer"
-            >
-              <span className="text-xl md:text-2xl">{service.icon}</span>
-              <span className="text-xs md:text-sm font-medium text-black dark:text-white font-sans">
-                {service.name}
-              </span>
-            </div>
+            <Link key={service.id} href={`/all-services?category=${service.id}`}>
+              <div className="flex flex-row items-center gap-2 md:gap-3 p-2.5 md:p-4 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-lg md:rounded-xl shadow-sm hover:shadow-md hover:scale-105 transition-all duration-200 cursor-pointer">
+                <span className="text-xl md:text-2xl">{service.icon}</span>
+                <span className="text-xs md:text-sm font-medium text-black dark:text-white font-sans">
+                  {service.name}
+                </span>
+              </div>
+            </Link>
           ))}
         </div>
 
