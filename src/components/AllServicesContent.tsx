@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useMemo, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import clsx from "clsx";
 import { categories } from "@/data/categories";
 import CategoryButton from "@/components/CategoryButton";
@@ -11,8 +11,16 @@ import { useTaskFormStore } from "@/store/useTaskFormStore";
 
 export default function AllServicesContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { resetForm } = useTaskFormStore();
   const [activeCategory, setActiveCategory] = useState(categories[0].id);
+
+  useEffect(() => {
+    const categoryParam = searchParams.get("category");
+    if (categoryParam && categories.some((cat) => cat.id === categoryParam)) {
+      setActiveCategory(categoryParam);
+    }
+  }, [searchParams]);
 
   const activeCategoryData = useMemo(
     () => categories.find((cat) => cat.id === activeCategory),
