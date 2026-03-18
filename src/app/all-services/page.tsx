@@ -1,5 +1,6 @@
 import AllServicesContent from "@/components/AllServicesContent";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Բոլոր ծառայությունները | Ընտրեք կատեգորիան",
@@ -7,5 +8,15 @@ export const metadata: Metadata = {
 };
 
 export default function AllServicesPage() {
-  return <AllServicesContent />;
+  return (
+    <Suspense 
+      fallback={
+        <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 flex items-center justify-center">
+          <div className="text-gray-600 dark:text-zinc-400">Բեռնվում է...</div>
+        </div>
+      }
+    >
+      <AllServicesContent />
+    </Suspense>
+  );
 }
