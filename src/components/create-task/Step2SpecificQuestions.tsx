@@ -2,10 +2,9 @@
 
 import { useForm } from 'react-hook-form';
 import { useTaskFormStore } from '@/store/useTaskFormStore';
-import { getSubcategoryConfig, hasSpecificFields } from '@/utils/form-helpers';
+import { getSubcategoryConfig } from '@/utils/form-helpers';
 import FormNavigation from './FormNavigation';
 import DynamicFormField from './DynamicFormField';
-import { useEffect } from 'react';
 
 export default function Step2SpecificQuestions() {
   const { formData, updateFormData, goToNextStep, goToPreviousStep } = useTaskFormStore();
@@ -16,17 +15,12 @@ export default function Step2SpecificQuestions() {
     defaultValues: formData.specificAnswers || {},
   });
 
-  useEffect(() => {
-    if (!hasSpecificFields(formData.subcategoryId || '')) {
-      goToNextStep();
-    }
-  }, [formData.subcategoryId, goToNextStep]);
-
   const onSubmit = (data: any) => {
     updateFormData({ specificAnswers: data });
     goToNextStep();
   };
 
+  // Եթե կոնֆիգուրացիա չկա կամ հատուկ դաշտեր չկան, վերադարձնել դատարկ կոմպոնենտ
   if (!config || config.specificFields.length === 0) {
     return null;
   }
