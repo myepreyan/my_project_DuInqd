@@ -6,9 +6,10 @@ import { useTaskFormStore } from '@/store/useTaskFormStore';
 import { step3Schema } from '@/schemas/task-form-schema';
 import FormNavigation from './FormNavigation';
 import { useState } from 'react';
+import { hasSpecificFields } from '@/utils/form-helpers';
 
 export default function Step3Description() {
-  const { formData, updateFormData, goToNextStep, goToPreviousStep } = useTaskFormStore();
+  const { formData, updateFormData, goToNextStep, goToPreviousStep, setCurrentStep } = useTaskFormStore();
   const [charCount, setCharCount] = useState(formData.description?.length || 0);
   
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -17,6 +18,15 @@ export default function Step3Description() {
       description: formData.description || '',
     },
   });
+
+  const handleBack = () => {
+    // Եթե ենթակատեգորիայի համար հատուկ դաշտեր չկան, վերադառնալ քայլ 1-ին
+    if (!hasSpecificFields(formData.subcategoryId || '')) {
+      setCurrentStep(1);
+    } else {
+      goToPreviousStep();
+    }
+  };
 
   const onSubmit = (data: any) => {
     updateFormData(data);
@@ -85,7 +95,7 @@ export default function Step3Description() {
         <FormNavigation
           currentStep={3}
           totalSteps={7}
-          onBack={goToPreviousStep}
+          onBack={handleBack}
           onNext={handleSubmit(onSubmit)}
         />
       </div>
