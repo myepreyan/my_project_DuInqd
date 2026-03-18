@@ -6,8 +6,9 @@ import { useTaskFormStore } from '@/store/useTaskFormStore';
 import { categories } from '@/data/categories';
 import { step1Schema } from '@/schemas/task-form-schema';
 import FormNavigation from './FormNavigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { hasSpecificFields } from '@/utils/form-helpers';
+import { getPlaceholderForSubcategory } from '@/data/placeholder-examples';
 
 export default function Step1BasicInfo() {
   const { formData, updateFormData, goToNextStep, setCurrentStep } = useTaskFormStore();
@@ -36,6 +37,14 @@ export default function Step1BasicInfo() {
   const selectedSubcategoryId = watch('subcategoryId');
   const selectedCategory = categories.find(cat => cat.id === selectedCategoryId);
   const selectedSubcategory = selectedCategory?.subcategories.find(sub => sub.id === selectedSubcategoryId);
+  
+  // Դինամիկ placeholder
+  const placeholder = useMemo(() => {
+    if (selectedSubcategoryId) {
+      return getPlaceholderForSubcategory(selectedSubcategoryId);
+    }
+    return 'Օրինակ՝ լրացրեք առաջադրանքի վերնագիրը';
+  }, [selectedSubcategoryId]);
   
   const handleChangeCategory = () => {
     setShowDropdowns(true);
@@ -66,7 +75,7 @@ export default function Step1BasicInfo() {
             <input
               type="text"
               {...register('title')}
-              placeholder="Օրինակ՝ լվացել անվադողեր"
+              placeholder={placeholder}
               className={`
                 w-full px-4 py-4 text-base
                 bg-gray-50 dark:bg-zinc-800
