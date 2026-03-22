@@ -2,16 +2,16 @@
 import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { db } from "@/lib/db"
-import bcrypt from "bcryptjs"
+import { LOGIN_OTP_PREFIX } from "@/lib/login-otp"
 import { z } from "zod"
 
 const CredentialsProvider = require("next-auth/providers/credentials").default
 const GoogleProvider = require("next-auth/providers/google").default
 const FacebookProvider = require("next-auth/providers/facebook").default
 
-const loginSchema = z.object({
+const otpLoginSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(1)
+  otp: z.string().min(6).max(6),
 })
 
 export const authOptions = {
@@ -33,52 +33,81 @@ export const authOptions = {
       name: "credentials",
       credentials: {
         email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" }
+        otp: { label: "OTP", type: "text" },
       },
-      
+
       async authorize(credentials: any) {
-        const validated = loginSchema.safeParse(credentials)
+        const validated = otpLoginSchema.safeParse(credentials)
         if (!validated.success) {
           throw new Error("Invalid input")
         }
-        
-        const { email, password } = validated.data
-        
+
+        const { email, otp } = validated.data
+        const emailLower = email.toLowerCase()
+        const identifier = `${LOGIN_OTP_PREFIX}${emailLower}`
+
+        const verificationToken = await db.verificationToken.findFirst({
+          where: {
+            identifier,
+            token: otp,
+          },
+        })
+
+        if (!verificationToken) {
+          throw new Error("Սխալ կամ ժամկետանց կոդ")
+        }
+
+        if (verificationToken.expires < new Date()) {
+          await db.verificationToken.delete({
+            where: {
+              identifier_token: {
+                identifier,
+                token: otp,
+              },
+            },
+          }).catch(() => {})
+          throw new Error("Կոդի ժամկետը լրացել է: Խնդրում ենք նորից ուղարկել")
+        }
+
         const user = await db.user.findUnique({
-          where: { email: email.toLowerCase() },
+          where: { email: emailLower },
           select: {
             id: true,
             email: true,
             name: true,
-            password: true,
             isActive: true,
             role: true,
             image: true,
-          }
+            password: true,
+          },
         })
-        
+
         if (!user) {
-          throw new Error("Սխալ email կամ password")
+          throw new Error("Սխալ email կամ կոդ")
         }
-        
+
         if (!user.isActive) {
           throw new Error("Խնդրում ենք հաստատել ձեր email հասցեն")
         }
-        
+
         if (!user.password) {
           throw new Error("Օգտագործեք social login")
         }
-        
-        const isPasswordValid = await bcrypt.compare(password, user.password)
-        if (!isPasswordValid) {
-          throw new Error("Սխալ email կամ password")
-        }
-        
+
+        await db.verificationToken.delete({
+          where: {
+            identifier_token: {
+              identifier,
+              token: otp,
+            },
+          },
+        })
+
         await db.user.update({
           where: { id: user.id },
-          data: { lastLoginAt: new Date() }
+          data: { lastLoginAt: new Date() },
         })
-        
+
         return {
           id: user.id,
           email: user.email,
@@ -86,7 +115,7 @@ export const authOptions = {
           role: user.role,
           image: user.image,
         }
-      }
+      },
     }),
     
     GoogleProvider({
