@@ -1,6 +1,17 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+/** Lazy init: top-level `new Resend()` throws during `next build` when env is unset (e.g. Vercel collect page data). */
+let resendClient: Resend | null = null
+function getResend(): Resend {
+  const key = process.env.RESEND_API_KEY
+  if (!key) {
+    throw new Error('RESEND_API_KEY is not configured')
+  }
+  if (!resendClient) {
+    resendClient = new Resend(key)
+  }
+  return resendClient
+}
 
 interface EmailOptions {
   to: string
@@ -13,7 +24,7 @@ export async function sendEmail({ to, subject, html }: EmailOptions) {
     console.log('📤 Attempting to send email to:', to)
     console.log('📧 From:', process.env.EMAIL_FROM || 'onboarding@resend.dev')
     
-    const data = await resend.emails.send({
+    const data = await getResend().emails.send({
       from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
       to,
       subject,
