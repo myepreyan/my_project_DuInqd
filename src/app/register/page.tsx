@@ -1,4 +1,5 @@
 import RegisterForm from "@/components/auth/RegisterForm"
+import SocialLoginButtons from "@/components/auth/SocialLoginButtons"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -19,10 +20,26 @@ export default function RegisterPage() {
       
       {/* Form Container */}
       <div className="relative z-10 max-w-md w-full">
-        <div className="backdrop-blur-md bg-white/15 border-2 border-white/30 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl">
+        <div className="backdrop-blur-md bg-white/15 border-2 border-white/30 rounded-2xl md:rounded-3xl p-3 md:p-5 shadow-2xl space-y-4">
+          <div className="text-center">
+            <h1 className="text-white text-xl md:text-2xl font-bold">Գրանցվել</h1>
+            <p className="text-white/80 text-xs mt-1">Ստեղծեք ձեր հաշիվը</p>
+          </div>
+          
+          <SocialLoginButtons />
+          
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-white/30"></div>
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="px-3 backdrop-blur-md bg-white/10 text-white/80 rounded-full">Կամ</span>
+            </div>
+          </div>
+          
           <RegisterForm />
           
-          <p className="text-center text-white text-xs md:text-sm mt-3 md:mt-4">
+          <p className="text-center text-white text-xs">
             Արդեն ունե՞ք հաշիվ{" "}
             <Link href="/login" className="font-semibold underline hover:no-underline">
               Մուտք գործել

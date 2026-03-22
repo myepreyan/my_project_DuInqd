@@ -57,8 +57,6 @@ export default function LoginForm() {
   
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 md:space-y-4">
-      <h1 className="text-2xl md:text-3xl font-bold text-white text-center mb-4 md:mb-6">Մուտք</h1>
-      
       {error && (
         <div className="p-3 bg-red-500/20 border border-red-400/50 rounded-lg text-white text-sm text-center">
           {error}

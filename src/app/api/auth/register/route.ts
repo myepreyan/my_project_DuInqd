@@ -2,15 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
-import { sendVerificationEmail } from '@/lib/email'
+import { sendVerificationCode } from '@/lib/email'
 
 const registerSchema = z.object({
   name: z.string().min(2, "Անունը պետք է լինի նվազագույնը 2 տառ"),
   email: z.string().email("Սխալ email ֆորմատ"),
   password: z.string()
     .min(8, "Password-ը պետք է լինի նվազագույնը 8 տառ")
-    .regex(/[A-Z]/, "Պետք է պարունակի մեծատառ")
-    .regex(/[a-z]/, "Պետք է պարունակի փոքրատառ")
+    .regex(/[A-ZԱ-Ֆ]/, "Պետք է պարունակի մեծատառ (A-Z կամ Ա-Ֆ)")
+    .regex(/[a-zա-ֆ]/, "Պետք է պարունակի փոքրատառ (a-z կամ ա-ֆ)")
     .regex(/[0-9]/, "Պետք է պարունակի թիվ"),
   confirmPassword: z.string()
 }).refine((data) => data.password === data.confirmPassword, {
@@ -46,8 +46,9 @@ export async function POST(request: NextRequest) {
     
     const hashedPassword = await bcrypt.hash(password, 12)
     
-    const verificationToken = crypto.randomUUID()
-    const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000)
+    // Generate 6-digit verification code
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString()
+    const verificationExpires = new Date(Date.now() + 15 * 60 * 1000) // 15 minutes
     
     const user = await db.user.create({
       data: {
@@ -66,12 +67,17 @@ export async function POST(request: NextRequest) {
     await db.verificationToken.create({
       data: {
         identifier: user.email,
-        token: verificationToken,
+        token: verificationCode,
         expires: verificationExpires,
       }
     })
     
-    await sendVerificationEmail(user.email, verificationToken, user.name)
+    await sendVerificationCode(user.email, verificationCode, user.name)
+    
+    // Development - Log verification code
+    if (process.env.NODE_ENV === 'development') {
+      console.log('📧 Verification Code for', user.email, ':', verificationCode)
+    }
     
     return NextResponse.json({
       success: true,

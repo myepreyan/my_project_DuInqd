@@ -6,7 +6,10 @@ export async function GET(request: NextRequest) {
   const token = searchParams.get('token')
   
   if (!token) {
-    return NextResponse.redirect(new URL('/auth/error?error=InvalidToken', request.url))
+    return NextResponse.json(
+      { error: 'Հաստատման հղումը անվավեր է' },
+      { status: 400 }
+    )
   }
   
   try {
@@ -15,12 +18,18 @@ export async function GET(request: NextRequest) {
     })
     
     if (!verificationToken) {
-      return NextResponse.redirect(new URL('/auth/error?error=InvalidToken', request.url))
+      return NextResponse.json(
+        { error: 'Հաստատման հղումը անվավեր է կամ արդեն օգտագործված է' },
+        { status: 400 }
+      )
     }
     
     if (verificationToken.expires < new Date()) {
       await db.verificationToken.delete({ where: { token } })
-      return NextResponse.redirect(new URL('/auth/error?error=TokenExpired', request.url))
+      return NextResponse.json(
+        { error: 'Հաստատման հղումը ժամկետանց է: Խնդրում ենք կրկին գրանցվել' },
+        { status: 400 }
+      )
     }
     
     await db.user.update({
@@ -33,10 +42,16 @@ export async function GET(request: NextRequest) {
     
     await db.verificationToken.delete({ where: { token } })
     
-    return NextResponse.redirect(new URL('/login?verified=true', request.url))
+    return NextResponse.json({
+      success: true,
+      message: 'Email-ը հաջողությամբ հաստատված է: Կարող եք մուտք գործել'
+    })
     
   } catch (error) {
     console.error('Verification error:', error)
-    return NextResponse.redirect(new URL('/auth/error?error=VerificationFailed', request.url))
+    return NextResponse.json(
+      { error: 'Հաստատումը ձախողվեց: Խնդրում ենք փորձել ավելի ուշ' },
+      { status: 500 }
+    )
   }
 }
