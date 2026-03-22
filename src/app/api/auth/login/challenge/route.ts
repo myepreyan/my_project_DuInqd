@@ -134,12 +134,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error: "Սերվերի սխալ: Խնդրում ենք փորձել ավելի ուշ",
-        ...(debugAuth
-          ? {
-              debugMessage: err.message,
-              ...(prismaCode ? { prismaCode } : {}),
-            }
-          : {}),
+        errName: err.name,
+        ...(prismaCode ? { prismaCode } : {}),
+        ...(debugAuth ? { debugMessage: err.message } : {}),
       },
       { status: 500 }
     )
