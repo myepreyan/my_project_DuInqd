@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import { useTaskFormStore } from "@/store/useTaskFormStore";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const router = useRouter();
+  const { data: session, status } = useSession();
   const { resetForm } = useTaskFormStore();
 
   const handleCreateTask = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -26,6 +29,13 @@ export default function Header() {
   const handleLogoClick = () => {
     resetForm();
     router.push('/');
+  };
+  
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    router.push('/');
+    router.refresh();
+    setIsUserMenuOpen(false);
   };
 
   return (
@@ -62,10 +72,64 @@ export default function Header() {
           >
             Գտնել առաջադրանք
           </a>
-          <button className="group relative px-6 py-2.5 text-sm font-medium text-black dark:text-white border border-black/[.12] dark:border-white/[.2] rounded-full transition-all duration-300 hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black hover:scale-105 hover:shadow-lg hover:shadow-black/[.1] dark:hover:shadow-white/[.1] active:scale-95 overflow-hidden">
-            <span className="relative z-10">Մուտք</span>
-            <span className="absolute inset-0 bg-gradient-to-r from-black/[.03] to-black/[.06] dark:from-white/[.03] dark:to-white/[.06] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-          </button>
+          
+          {status === "loading" ? (
+            <div className="px-6 py-2.5">
+              <div className="w-16 h-4 bg-black/10 dark:bg-white/10 rounded animate-pulse"></div>
+            </div>
+          ) : session ? (
+            <div className="relative">
+              <button
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                className="flex items-center gap-2 px-4 py-2 rounded-full border border-black/[.12] dark:border-white/[.2] hover:bg-black/[.04] dark:hover:bg-white/[.06] transition-all"
+              >
+                {session.user.image && (
+                  <img
+                    src={session.user.image}
+                    alt={session.user.name || ""}
+                    className="w-8 h-8 rounded-full"
+                  />
+                )}
+                <span className="text-sm font-medium">{session.user.name}</span>
+              </button>
+              
+              {isUserMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-black border border-black/[.08] dark:border-white/[.145] rounded-lg shadow-lg overflow-hidden">
+                  <button
+                    onClick={() => {
+                      router.push('/profile');
+                      setIsUserMenuOpen(false);
+                    }}
+                    className="w-full px-4 py-2 text-left text-sm hover:bg-black/[.04] dark:hover:bg-white/[.06] transition-colors"
+                  >
+                    Իմ պրոֆիլը
+                  </button>
+                  <hr className="border-black/[.08] dark:border-white/[.145]" />
+                  <button
+                    onClick={handleLogout}
+                    className="w-full px-4 py-2 text-left text-sm hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 transition-colors"
+                  >
+                    Դուրս գալ
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => router.push('/login')}
+                className="px-6 py-2.5 text-sm font-medium border border-black/[.12] dark:border-white/[.2] rounded-full hover:bg-black/[.04] dark:hover:bg-white/[.06] transition-all"
+              >
+                Մուտք
+              </button>
+              <button
+                onClick={() => router.push('/register')}
+                className="px-6 py-2.5 text-sm font-medium bg-black dark:bg-white text-white dark:text-black rounded-full hover:scale-105 transition-all"
+              >
+                Գրանցվել
+              </button>
+            </div>
+          )}
         </nav>
 
         {/* Hamburger Menu Button - Visible on mobile */}
@@ -115,9 +179,47 @@ export default function Header() {
           >
             Գտնել առաջադրանք
           </a>
-          <button className="w-full mt-1 px-6 py-3 text-sm font-medium text-white dark:text-black bg-black dark:bg-white rounded-full hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-md">
-            Մուտք
-          </button>
+          
+          {session ? (
+            <>
+              <button
+                onClick={() => {
+                  router.push('/profile');
+                  setIsMenuOpen(false);
+                }}
+                className="w-full px-6 py-3 text-sm font-medium text-black dark:text-white bg-black/[.04] dark:bg-white/[.06] hover:bg-black/[.08] dark:hover:bg-white/[.12] rounded-full text-center transition-all duration-200 active:scale-95"
+              >
+                Իմ պրոֆիլը
+              </button>
+              <button 
+                onClick={handleLogout}
+                className="w-full mt-1 px-6 py-3 text-sm font-medium text-white dark:text-black bg-red-600 dark:bg-red-500 rounded-full hover:scale-[1.02] active:scale-95 transition-all duration-200"
+              >
+                Դուրս գալ
+              </button>
+            </>
+          ) : (
+            <>
+              <button 
+                onClick={() => {
+                  router.push('/login');
+                  setIsMenuOpen(false);
+                }}
+                className="w-full px-6 py-3 text-sm font-medium text-black dark:text-white bg-black/[.04] dark:bg-white/[.06] hover:bg-black/[.08] dark:hover:bg-white/[.12] rounded-full text-center transition-all duration-200 active:scale-95"
+              >
+                Մուտք
+              </button>
+              <button 
+                onClick={() => {
+                  router.push('/register');
+                  setIsMenuOpen(false);
+                }}
+                className="w-full px-6 py-3 text-sm font-medium text-white dark:text-black bg-black dark:bg-white rounded-full hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-md"
+              >
+                Գրանցվել
+              </button>
+            </>
+          )}
         </nav>
       </div>
     </header>
