@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Tools - Dev Only</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      display: grid;
+      gap: 20px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 24px;
+      text-align: center;
+    }
+    h2 {
+      color: #555;
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+    .warning {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+      color: #856404;
+      font-size: 14px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: transform 0.2s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .btn-activate {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .btn-delete {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    .result {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+    }
+    .result.success {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+    .result.error {
+      background: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔧 Admin Tools - Development Only</h1>
+    
+    <!-- Activate User -->
+    <div class="card">
+      <h2>✅ Activate User</h2>
+      <div class="warning">
+        ⚠️ Ակտիվացնել user-ը առանց email verification-ի
+      </div>
+      
+      <form id="activateForm">
+        <label for="activateEmail">Email:</label>
+        <input 
+          type="email" 
+          id="activateEmail" 
+          placeholder="user@example.com"
+          required
+        />
+        <button type="submit" class="btn-activate" id="activateBtn">
+          Ակտիվացնել
+        </button>
+      </form>
+      
+      <div id="activateResult" class="result"></div>
+    </div>
+
+    <!-- Delete User -->
+    <div class="card">
+      <h2>🗑️ Delete User</h2>
+      <div class="warning">
+        ⚠️ Ջնջել user-ը database-ից (չի կարող հետ վերադարձվել!)
+      </div>
+      
+      <form id="deleteForm">
+        <label for="deleteEmail">Email:</label>
+        <input 
+          type="email" 
+          id="deleteEmail" 
+          placeholder="user@example.com"
+          required
+        />
+        <button type="submit" class="btn-delete" id="deleteBtn">
+          Ջնջել
+        </button>
+      </form>
+      
+      <div id="deleteResult" class="result"></div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="card">
+      <h2>🔗 Quick Links</h2>
+      <a href="http://localhost:5555" target="_blank" style="display: block; padding: 10px; background: #f0f0f0; border-radius: 8px; text-decoration: none; color: #333; margin-bottom: 10px; text-align: center;">
+        📊 Prisma Studio
+      </a>
+      <a href="/register" style="display: block; padding: 10px; background: #f0f0f0; border-radius: 8px; text-decoration: none; color: #333; margin-bottom: 10px; text-align: center;">
+        📝 Register Page
+      </a>
+      <a href="/login" style="display: block; padding: 10px; background: #f0f0f0; border-radius: 8px; text-decoration: none; color: #333; text-align: center;">
+        🔐 Login Page
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Activate User
+    const activateForm = document.getElementById('activateForm');
+    const activateResult = document.getElementById('activateResult');
+    const activateBtn = document.getElementById('activateBtn');
+
+    activateForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('activateEmail').value;
+      activateBtn.disabled = true;
+      activateBtn.textContent = 'Ակտիվացվում է...';
+      activateResult.style.display = 'none';
+
+      try {
+        const response = await fetch('/api/auth/activate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          activateResult.className = 'result success';
+          activateResult.textContent = `✅ ${data.message}`;
+        } else {
+          activateResult.className = 'result error';
+          activateResult.textContent = `❌ ${data.error}`;
+        }
+      } catch (error) {
+        activateResult.className = 'result error';
+        activateResult.textContent = '❌ Սերվերի սխալ';
+        console.error(error);
+      } finally {
+        activateResult.style.display = 'block';
+        activateBtn.disabled = false;
+        activateBtn.textContent = 'Ակտիվացնել';
+      }
+    });
+
+    // Delete User
+    const deleteForm = document.getElementById('deleteForm');
+    const deleteResult = document.getElementById('deleteResult');
+    const deleteBtn = document.getElementById('deleteBtn');
+
+    deleteForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('deleteEmail').value;
+      
+      if (!confirm(`Վստա՞հ եք, որ ուզում եք ջնջել ${email}-ը?`)) {
+        return;
+      }
+
+      deleteBtn.disabled = true;
+      deleteBtn.textContent = 'Ջնջվում է...';
+      deleteResult.style.display = 'none';
+
+      try {
+        const response = await fetch('/api/auth/delete-user', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          deleteResult.className = 'result success';
+          deleteResult.textContent = `✅ ${data.message}`;
+          deleteForm.reset();
+        } else {
+          deleteResult.className = 'result error';
+          deleteResult.textContent = `❌ ${data.error}`;
+        }
+      } catch (error) {
+        deleteResult.className = 'result error';
+        deleteResult.textContent = '❌ Սերվերի սխալ';
+        console.error(error);
+      } finally {
+        deleteResult.style.display = 'block';
+        deleteBtn.disabled = false;
+        deleteBtn.textContent = 'Ջնջել';
+      }
+    });
+  </script>
+</body>
+</html>
