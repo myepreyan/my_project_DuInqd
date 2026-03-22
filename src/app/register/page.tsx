@@ -1,0 +1,35 @@
+import RegisterForm from "@/components/auth/RegisterForm"
+import Link from "next/link"
+import Image from "next/image"
+
+export default function RegisterPage() {
+  return (
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden">
+      {/* Background Image */}
+      <Image
+        src="/hero2.png"
+        alt="Background"
+        fill
+        className="object-cover"
+        priority
+      />
+      
+      {/* Overlay for better readability */}
+      <div className="absolute inset-0 bg-black/20"></div>
+      
+      {/* Form Container */}
+      <div className="relative z-10 max-w-md w-full">
+        <div className="backdrop-blur-md bg-white/15 border-2 border-white/30 rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-2xl">
+          <RegisterForm />
+          
+          <p className="text-center text-white text-xs md:text-sm mt-3 md:mt-4">
+            Արդեն ունե՞ք հաշիվ{" "}
+            <Link href="/login" className="font-semibold underline hover:no-underline">
+              Մուտք գործել
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
