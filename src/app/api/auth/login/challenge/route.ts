@@ -12,6 +12,18 @@ const challengeSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    if (!process.env.DATABASE_URL?.trim()) {
+      console.error("login-challenge: DATABASE_URL is not set")
+      return NextResponse.json(
+        {
+          error:
+            "Կազմաձևման սխալ։ Կապվեք աջակցության հետ։",
+          code: "MISSING_DATABASE_URL",
+        },
+        { status: 503 }
+      )
+    }
+
     const body = await request.json()
     const validated = challengeSchema.safeParse(body)
     if (!validated.success) {
@@ -82,8 +94,53 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error("Login challenge error:", error)
+    // #region agent log
+    const err = error instanceof Error ? error : new Error(String(error))
+    const prismaCode =
+      typeof error === "object" && error !== null && "code" in error
+        ? String((error as { code: unknown }).code)
+        : undefined
+    fetch("http://127.0.0.1:7564/ingest/a040ba94-020c-4f8d-8973-1fa802992b59", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Debug-Session-Id": "bfb8ad",
+      },
+      body: JSON.stringify({
+        sessionId: "bfb8ad",
+        hypothesisId: "H1",
+        location: "api/auth/login/challenge/route.ts:catch",
+        message: err.message,
+        data: {
+          name: err.name,
+          prismaCode,
+        },
+        timestamp: Date.now(),
+        runId: "post-fix",
+      }),
+    }).catch(() => {})
+    console.error(
+      JSON.stringify({
+        tag: "login-challenge-debug",
+        name: err.name,
+        message: err.message,
+        prismaCode,
+      })
+    )
+    // #endregion
+    const debugAuth =
+      process.env.VERCEL_DEBUG_AUTH === "1" ||
+      process.env.AUTH_DEBUG_ERROR === "1"
     return NextResponse.json(
-      { error: "Սերվերի սխալ: Խնդրում ենք փորձել ավելի ուշ" },
+      {
+        error: "Սերվերի սխալ: Խնդրում ենք փորձել ավելի ուշ",
+        ...(debugAuth
+          ? {
+              debugMessage: err.message,
+              ...(prismaCode ? { prismaCode } : {}),
+            }
+          : {}),
+      },
       { status: 500 }
     )
   }
