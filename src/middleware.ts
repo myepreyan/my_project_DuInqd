@@ -1,13 +1,53 @@
 import { withAuth } from "next-auth/middleware"
 
-export default withAuth({
-  // Սա ավտոմատ կստուգի թոքենը
-  pages: {
-    signIn: "/login",
+import { NextResponse } from "next/server"
+
+
+
+export default withAuth(
+
+  function middleware(req) {
+
+    const token = req.nextauth.token
+
+    const path = req.nextUrl.pathname
+
+   
+
+    if (path.startsWith('/admin') && token?.role !== 'ADMIN') {
+
+      return NextResponse.redirect(new URL('/', req.url))
+
+    }
+
+   
+
+    return NextResponse.next()
+
   },
-})
+
+  {
+
+    callbacks: {
+
+      authorized: ({ token }) => !!token
+
+    },
+
+  }
+
+)
+
+
 
 export const config = {
-  // Պաշտպանեք միայն պրոֆիլը և ադմինը
-  matcher: ["/profile/:path*", "/admin/:path*"]
+
+  matcher: [
+
+    '/profile/:path*',
+
+    '/admin/:path*',
+
+  ]
+
 }

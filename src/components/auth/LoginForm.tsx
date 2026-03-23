@@ -89,9 +89,7 @@ export default function LoginForm() {
     setError("")
     try {
       const result = await signIn("credentials", {
-        // redirect: false,
-        redirect: true, 
-      callbackUrl: "/profile",
+        redirect: false,
         email: pendingEmail,
         otp: data.otp,
       })
