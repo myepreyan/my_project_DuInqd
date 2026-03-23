@@ -92,45 +92,33 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error("Login challenge error:", error)
-    // #region agent log
-    const err = error instanceof Error ? error : new Error(String(error))
-    const prismaCode =
-      typeof error === "object" && error !== null && "code" in error
-        ? String((error as { code: unknown }).code)
-        : undefined
-    fetch("http://127.0.0.1:7564/ingest/a040ba94-020c-4f8d-8973-1fa802992b59", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Debug-Session-Id": "bfb8ad",
-      },
-      body: JSON.stringify({
-        sessionId: "bfb8ad",
-        hypothesisId: "H1",
-        location: "api/auth/login/challenge/route.ts:catch",
-        message: err.message,
-        data: {
-          name: err.name,
-          prismaCode,
-        },
-        timestamp: Date.now(),
-        runId: "post-fix",
-      }),
-    }).catch(() => {})
-    console.error(
-      JSON.stringify({
-        tag: "login-challenge-debug",
-        name: err.name,
-        message: err.message,
-        prismaCode,
-      })
-    )
-    // #endregion
-    const debugAuth =
-      process.env.VERCEL_DEBUG_AUTH === "1" ||
-      process.env.AUTH_DEBUG_ERROR === "1"
+  }  catch (error) {
+    // 1. Գրանցում ենք սխալը սերվերի լոգերում (Vercel-ում սա կերևա Logs բաժնում)
+    console.error("Login challenge error:", error);
+
+    const err = error instanceof Error ? error : new Error(String(error));
+    
+    // 2. Ստանում ենք Prisma-ի սխալի կոդը (եթե կա)
+    const prismaCode = (error && typeof error === "object" && "code" in error)
+      ? String((error as { code: unknown }).code)
+      : undefined;
+
+    // 3. Եթե ցանկանում եք պահել AI-ի տեղային լոգերը ՄԻԱՅՆ ձեր համակարգչի վրա
+    if (process.env.NODE_ENV === "development") {
+      fetch("http://127.0.0.1:7564/ingest/a040ba94-020c-4f8d-8973-1fa802992b59", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "bfb8ad" },
+        body: JSON.stringify({
+          message: err.message,
+          data: { name: err.name, prismaCode },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {}); // Լռեցնում ենք սխալը, եթե AI գործիքը միացված չէ
+    }
+
+    // 4. Ստուգում ենք՝ արդյոք պետք է ցույց տալ մանրամասն սխալը (Debug mode)
+    const debugAuth = process.env.VERCEL_DEBUG_AUTH === "1" || process.env.AUTH_DEBUG_ERROR === "1";
+
     return NextResponse.json(
       {
         error: "Սերվերի սխալ: Խնդրում ենք փորձել ավելի ուշ",
@@ -139,6 +127,6 @@ export async function POST(request: NextRequest) {
         ...(debugAuth ? { debugMessage: err.message } : {}),
       },
       { status: 500 }
-    )
+    );
   }
 }
