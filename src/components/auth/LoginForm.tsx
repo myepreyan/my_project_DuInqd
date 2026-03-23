@@ -99,8 +99,9 @@ export default function LoginForm() {
         return
       }
 
-      router.push("/profile")
-      router.refresh()
+      // router.push("/profile")
+      // router.refresh()
+      window.location.href = "/profile";
     } catch {
       setError("Սերվերի սխալ: Խնդրում ենք փորձել ավելի ուշ")
     } finally {
