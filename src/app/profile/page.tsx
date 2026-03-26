@@ -1,44 +1,22 @@
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
-import { redirect } from "next/navigation"
-
-export default async function ProfilePage() {
-  const session: any = await getServerSession(authOptions as any)
-  
-  if (!session?.user) {
-    redirect('/login')
-  }
-  
+export default function ActiveTasksPage() {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-8">Իմ պրոֆիլը</h1>
-      
-      <div className="bg-white dark:bg-black border border-black/[.08] dark:border-white/[.145] rounded-lg shadow-sm p-6">
-        <div className="flex items-center gap-4 mb-6">
-          {session.user?.image && (
-            <img
-              src={session.user.image}
-              alt={session.user.name || ""}
-              className="w-20 h-20 rounded-full"
-            />
-          )}
-          <div>
-            <h2 className="text-2xl font-semibold">{session.user?.name || 'User'}</h2>
-            <p className="text-black/60 dark:text-white/60">{session.user?.email}</p>
-            <p className="text-sm text-black/40 dark:text-white/40 mt-1">
-              Role: {session.user?.role || 'USER'}
-            </p>
-          </div>
+    <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+      <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">Ընթացիկ Առաջադրանքներ</h2>
+      <div className="border border-gray-100 dark:border-white/10 rounded-2xl p-5 hover:border-red-200 dark:hover:border-red-500/30 transition-colors">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="font-semibold text-lg text-gray-900 dark:text-white">
+            Թարգմանել 10 էջանոց տեքստ անգլերենից հայերեն
+          </h3>
+          <span className="bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-300 text-xs px-2.5 py-1 rounded-full font-medium">
+            Ընթացքի մեջ է
+          </span>
         </div>
-        
-        <div className="space-y-4">
-          <div>
-            <h3 className="font-semibold mb-2">Հաշվի տեղեկություններ</h3>
-            <div className="space-y-2 text-sm">
-              <p><span className="text-black/60 dark:text-white/60">ID:</span> {session.user?.id}</p>
-              <p><span className="text-black/60 dark:text-white/60">Email:</span> {session.user?.email}</p>
-            </div>
-          </div>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2">
+          Տեքստը պարունակում է տեխնիկական տերմիններ IT ոլորտից: Անհրաժեշտ է ճշգրիտ և գրագետ թարգմանություն։
+        </p>
+        <div className="flex items-center gap-4 text-sm font-medium text-gray-900 dark:text-white">
+          <span>Վճար: 15,000 ֏</span>
+          <span className="text-red-500 cursor-pointer hover:underline">Դիտել մանրամասները &rarr;</span>
         </div>
       </div>
     </div>
