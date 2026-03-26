@@ -141,7 +141,7 @@ export default function LoginForm() {
             inputMode="numeric"
             autoComplete="one-time-code"
             maxLength={6}
-            className="w-full px-2 py-2 md:py-3 bg-transparent border-0 border-b-2 border-white/60 text-white text-center text-2xl tracking-[0.4em] font-mono placeholder-white/50 focus:outline-none focus:border-white transition-colors"
+            className="w-full px-2 py-1.5 md:py-2 bg-transparent border-0 border-b-2 border-white/60 text-white text-center text-2xl tracking-[0.4em] font-mono placeholder-white/50 focus:outline-none focus:border-white transition-colors"
             placeholder="••••••"
             disabled={isLoading}
           />
@@ -174,7 +174,7 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-2.5 md:py-3 bg-white text-purple-900 rounded-full text-sm md:text-base font-semibold hover:bg-white/90 disabled:opacity-50 transition-all shadow-lg"
+          className="w-full py-2 md:py-2.5 bg-white text-purple-900 rounded-full text-sm md:text-base font-semibold hover:bg-white/90 disabled:opacity-50 transition-all shadow-lg"
         >
           {isLoading ? "Բեռնվում է..." : "Հաստատել և մուտք գործել"}
         </button>
@@ -201,7 +201,7 @@ export default function LoginForm() {
           {...credentialsForm.register("email")}
           type="email"
           autoComplete="email"
-          className="w-full px-2 py-2 md:py-3 bg-transparent border-0 border-b-2 border-white/60 text-white text-sm md:text-base placeholder-white/50 focus:outline-none focus:border-white transition-colors"
+          className="w-full px-2 py-1.5 md:py-2 bg-transparent border-0 border-b-2 border-white/60 text-white text-sm md:text-base placeholder-white/50 focus:outline-none focus:border-white transition-colors"
           placeholder=""
           disabled={isLoading}
         />
@@ -220,7 +220,7 @@ export default function LoginForm() {
           {...credentialsForm.register("password")}
           type="password"
           autoComplete="current-password"
-          className="w-full px-2 py-2 md:py-3 bg-transparent border-0 border-b-2 border-white/60 text-white text-sm md:text-base placeholder-white/50 focus:outline-none focus:border-white transition-colors"
+          className="w-full px-2 py-1.5 md:py-2 bg-transparent border-0 border-b-2 border-white/60 text-white text-sm md:text-base placeholder-white/50 focus:outline-none focus:border-white transition-colors"
           placeholder=""
           disabled={isLoading}
         />
@@ -251,7 +251,7 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full py-2.5 md:py-3 bg-white text-purple-900 rounded-full text-sm md:text-base font-semibold hover:bg-white/90 disabled:opacity-50 transition-all shadow-lg"
+        className="w-full py-2 md:py-2.5 bg-white text-purple-900 rounded-full text-sm md:text-base font-semibold hover:bg-white/90 disabled:opacity-50 transition-all shadow-lg"
       >
         {isLoading ? "Բեռնվում է..." : "Շարունակել"}
       </button>
