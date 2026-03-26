@@ -99,9 +99,8 @@ export default function LoginForm() {
         return
       }
 
-      router.push("/profile")
-      router.refresh()
-      
+      // Force a full page reload to ensure session cookies are read correctly by middleware/server on Vercel
+      window.location.href = "/profile"
     } catch {
       setError("Սերվերի սխալ: Խնդրում ենք փորձել ավելի ուշ")
     } finally {
