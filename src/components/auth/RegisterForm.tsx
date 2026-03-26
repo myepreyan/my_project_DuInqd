@@ -90,12 +90,12 @@ export default function RegisterForm() {
       )}
       
       <div>
-        <label className="block text-white text-xs md:text-sm font-normal mb-1 pl-1">Անուն</label>
+        <label className="block text-white text-sm font-normal mb-1.5 pl-1">Անուն</label>
         <input
           {...register("name")}
           type="text"
           autoComplete="name"
-          className="w-full px-2 py-1.5 md:py-2 bg-transparent border-0 border-b-2 border-white/60 text-white text-xs md:text-sm placeholder-white/50 focus:outline-none focus:border-white transition-colors"
+          className="w-full px-2 py-1.5 md:py-2 bg-transparent border-0 border-b-2 border-white/60 text-white text-sm md:text-base placeholder-white/50 focus:outline-none focus:border-white transition-colors"
           placeholder=""
           disabled={isLoading}
         />
@@ -105,12 +105,12 @@ export default function RegisterForm() {
       </div>
       
       <div>
-        <label className="block text-white text-xs md:text-sm font-normal mb-1 pl-1">Էլ․ փոստ</label>
+        <label className="block text-white text-sm font-normal mb-1.5 pl-1">Էլ․ փոստ</label>
         <input
           {...register("email")}
           type="email"
           autoComplete="email"
-          className="w-full px-2 py-1.5 md:py-2 bg-transparent border-0 border-b-2 border-white/60 text-white text-xs md:text-sm placeholder-white/50 focus:outline-none focus:border-white transition-colors"
+          className="w-full px-2 py-1.5 md:py-2 bg-transparent border-0 border-b-2 border-white/60 text-white text-sm md:text-base placeholder-white/50 focus:outline-none focus:border-white transition-colors"
           placeholder=""
           disabled={isLoading}
         />
@@ -120,12 +120,12 @@ export default function RegisterForm() {
       </div>
       
       <div>
-        <label className="block text-white text-xs md:text-sm font-normal mb-1 pl-1">Գաղտնաբառ</label>
+        <label className="block text-white text-sm font-normal mb-1.5 pl-1">Գաղտնաբառ</label>
         <input
           {...register("password")}
           type="password"
           autoComplete="new-password"
-          className="w-full px-2 py-1.5 md:py-2 bg-transparent border-0 border-b-2 border-white/60 text-white text-xs md:text-sm placeholder-white/50 focus:outline-none focus:border-white transition-colors"
+          className="peer w-full px-2 py-1.5 md:py-2 bg-transparent border-0 border-b-2 border-white/60 text-white text-sm md:text-base placeholder-white/50 focus:outline-none focus:border-white transition-colors"
           placeholder=""
           disabled={isLoading}
         />
@@ -135,19 +135,19 @@ export default function RegisterForm() {
           </div>
         )}
         {!errors.password && (
-          <p className="text-white/50 text-xs mt-0.5 pl-1">
+          <p className="hidden peer-focus:block text-white/50 text-xs mt-0.5 pl-1">
             Նվազագույնը 8 տառ, մեծատառ (A-Z կամ Ա-Ֆ), փոքրատառ և թիվ
           </p>
         )}
       </div>
       
       <div>
-        <label className="block text-white text-xs md:text-sm font-normal mb-1 pl-1">Հաստատել գաղտնաբառը</label>
+        <label className="block text-white text-sm font-normal mb-1.5 pl-1">Հաստատել գաղտնաբառը</label>
         <input
           {...register("confirmPassword")}
           type="password"
           autoComplete="new-password"
-          className="w-full px-2 py-1.5 md:py-2 bg-transparent border-0 border-b-2 border-white/60 text-white text-xs md:text-sm placeholder-white/50 focus:outline-none focus:border-white transition-colors"
+          className="w-full px-2 py-1.5 md:py-2 bg-transparent border-0 border-b-2 border-white/60 text-white text-sm md:text-base placeholder-white/50 focus:outline-none focus:border-white transition-colors"
           placeholder=""
           disabled={isLoading}
         />
@@ -159,7 +159,7 @@ export default function RegisterForm() {
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full py-2 md:py-2.5 bg-white text-purple-900 rounded-full text-xs md:text-sm font-semibold hover:bg-white/90 disabled:opacity-50 transition-all shadow-lg mt-2 md:mt-3"
+        className="w-full py-2 md:py-2.5 bg-white text-purple-900 rounded-full text-sm md:text-base font-semibold hover:bg-white/90 disabled:opacity-50 transition-all shadow-lg mt-2 md:mt-3"
       >
         {isLoading ? "Բեռնվում է..." : "Գրանցվել"}
       </button>
