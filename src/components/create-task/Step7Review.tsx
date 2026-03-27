@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { useTaskFormStore } from '@/store/useTaskFormStore';
 import { categories } from '@/data/categories';
 import { getSubcategoryConfig } from '@/utils/form-helpers';
@@ -10,22 +11,38 @@ export default function Step7Review() {
   const router = useRouter();
   const { formData, goToPreviousStep, resetForm, setCurrentStep } = useTaskFormStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { data: session } = useSession();
 
   const category = categories.find(cat => cat.id === formData.categoryId);
   const subcategory = category?.subcategories.find(sub => sub.id === formData.subcategoryId);
   const config = getSubcategoryConfig(formData.subcategoryId || '');
 
   const handlePublish = async () => {
+    if (!session) {
+      alert('Առաջադրանքը հրապարակելու համար անհրաժեշտ է մուտք գործել կամ գրանցվել:');
+      const callbackUrl = encodeURIComponent(window.location.pathname + window.location.search);
+      router.push(`/login?callbackUrl=${callbackUrl}`);
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
       console.log('Publishing task:', formData);
       
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const res = await fetch('/api/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, status: 'inactive' })
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to publish task');
+      }
       
       alert('Առաջադրանքը հրապարակված է!');
       resetForm();
-      router.push('/find-task');
+      router.push('/profile/posts');
     } catch (error) {
       console.error('Error publishing task:', error);
       alert('Սխալ։ Խնդրում ենք փորձել կրկին։');
@@ -34,9 +51,32 @@ export default function Step7Review() {
     }
   };
 
-  const handleSaveDraft = () => {
-    alert('Սևագիրը պահպանված է!');
-    router.push('/');
+  const handleSaveDraft = async () => {
+    if (!session) {
+      alert('Սևագիրը պահպանելու համար անհրաժեշտ է մուտք գործել կամ գրանցվել:');
+      const callbackUrl = encodeURIComponent(window.location.pathname + window.location.search);
+      router.push(`/login?callbackUrl=${callbackUrl}`);
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, status: 'draft' })
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to save draft');
+      }
+      
+      alert('Սևագիրը պահպանված է!');
+      resetForm();
+      router.push('/profile/drafts');
+    } catch (error) {
+      console.error('Error saving draft:', error);
+      alert('Սխալ առաջացավ սևագիրը պահպանելիս:');
+    }
   };
 
   return (

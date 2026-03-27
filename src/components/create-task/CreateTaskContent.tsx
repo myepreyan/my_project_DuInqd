@@ -29,8 +29,13 @@ export default function CreateTaskContent() {
   }, [categoryId, subcategoryId, updateFormData]);
 
   useEffect(() => {
+    const isNavigationToAuth = () => {
+      const path = window.location.pathname;
+      return path.includes('/login') || path.includes('/register');
+    };
+
     const handleBeforeUnload = () => {
-      const isLeavingToOtherPage = !window.location.pathname.includes('/create-task');
+      const isLeavingToOtherPage = !window.location.pathname.includes('/create-task') && !isNavigationToAuth();
       if (isLeavingToOtherPage) {
         resetForm();
       }
@@ -40,7 +45,8 @@ export default function CreateTaskContent() {
     
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
-      if (!window.location.pathname.includes('/create-task')) {
+      const isLeavingToOtherPage = !window.location.pathname.includes('/create-task') && !isNavigationToAuth();
+      if (isLeavingToOtherPage) {
         resetForm();
       }
     };

@@ -72,23 +72,29 @@ model VerificationToken {
 }
 
 model Task {
-  id          String   @id @default(cuid())
-  title       String
-  description String   @db.Text
-  category    String
-  subcategory String
-  price       Float
-  deadline    DateTime?
-  location    String?
-  userId      String
-  status      String   @default("active")
+  id              String   @id @default(cuid())
+  title           String
+  description     String   @db.Text
+  categoryId      String
+  subcategoryId   String
+  priceType       String   @default("fixed")
+  price           Float?
+  deadline        String?
+  specificDate    String?
+  city            String?
+  address         String?
+  phone           String?
+  images          String[]
+  specificAnswers Json?
+  userId          String
+  status          String   @default("active")
   
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
   
   @@index([userId])
-  @@index([category])
+  @@index([categoryId])
   @@index([status])
 }

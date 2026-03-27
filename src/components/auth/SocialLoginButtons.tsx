@@ -3,13 +3,18 @@
 // @ts-ignore - NextAuth v4 compatibility with Next.js 16
 import { signIn } from "next-auth/react"
 
+import { useSearchParams } from "next/navigation"
+
 export default function SocialLoginButtons() {
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl") || "/profile"
+
   const handleGoogleLogin = () => {
-    signIn("google", { callbackUrl: "/profile" })
+    signIn("google", { callbackUrl })
   }
   
   const handleFacebookLogin = () => {
-    signIn("facebook", { callbackUrl: "/profile" })
+    signIn("facebook", { callbackUrl })
   }
   
   return (

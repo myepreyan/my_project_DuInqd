@@ -3,7 +3,7 @@
 import { useState } from "react"
 // @ts-ignore - NextAuth v4 compatibility with Next.js 16
 import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -31,6 +31,8 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [pendingEmail, setPendingEmail] = useState("")
   const [pendingPassword, setPendingPassword] = useState("")
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl") || "/profile"
 
   const credentialsForm = useForm<CredentialsFormData>({
     resolver: zodResolver(credentialsSchema),
@@ -100,7 +102,7 @@ export default function LoginForm() {
       }
 
       // Force a full page reload to ensure session cookies are read correctly by middleware/server on Vercel
-      window.location.href = "/profile"
+      window.location.href = callbackUrl
     } catch {
       setError("Սերվերի սխալ: Խնդրում ենք փորձել ավելի ուշ")
     } finally {

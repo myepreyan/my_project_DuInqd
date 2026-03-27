@@ -27,7 +27,9 @@ export default function LoginPage() {
             <p className="text-white/80 text-xs md:text-sm mt-2">Մուտք գործեք ձեր հաշիվ</p>
           </div>
 
-          <SocialLoginButtons />
+          <Suspense fallback={<div className="text-white text-center">Loading...</div>}>
+            <SocialLoginButtons />
+          </Suspense>
           
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">

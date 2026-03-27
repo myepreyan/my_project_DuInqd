@@ -9,6 +9,7 @@ export default function ProfileTabs() {
   const tabs = [
     { href: "/profile", label: "Ակտիվ (1)" },
     { href: "/profile/posts", label: "Իմ հայտարարությունները" },
+    { href: "/profile/drafts", label: "Սևագրեր" },
     { href: "/profile/reviews", label: "Կարծիքներ" },
     { href: "/profile/settings", label: "Կարգավորումներ" }
   ]

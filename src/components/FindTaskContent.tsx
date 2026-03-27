@@ -3,7 +3,6 @@
 import { useState, useEffect, useMemo } from "react";
 import clsx from "clsx";
 import { categories } from "@/data/categories";
-import { mockTasks } from "@/data/tasks";
 import { Task } from "@/types/task";
 import CategoryFilterSidebar from "@/components/CategoryFilterSidebar";
 import TaskCard from "@/components/TaskCard";
@@ -12,14 +11,15 @@ interface FindTaskContentProps {
   searchQuery: string;
   isSidebarOpen: boolean;
   setIsSidebarOpen: (open: boolean) => void;
+  tasks: Task[];
 }
 
-export default function FindTaskContent({ searchQuery, isSidebarOpen, setIsSidebarOpen }: FindTaskContentProps) {
+export default function FindTaskContent({ searchQuery, isSidebarOpen, setIsSidebarOpen, tasks }: FindTaskContentProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[] | null>(null);
   const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
 
   const filteredTasks = useMemo(() => {
-    let filtered = [...mockTasks];
+    let filtered = [...tasks];
 
     // Filter by categories
     if (selectedCategories !== null && selectedCategories.length > 0) {
@@ -51,7 +51,7 @@ export default function FindTaskContent({ searchQuery, isSidebarOpen, setIsSideb
         return (
           task.title.toLowerCase().includes(query) ||
           task.description.toLowerCase().includes(query) ||
-          task.tag.toLowerCase().includes(query) ||
+          (task.tag && task.tag.toLowerCase().includes(query)) ||
           (task.location && task.location.toLowerCase().includes(query)) ||
           categoryName.includes(query) ||
           subcategoryName.includes(query)
