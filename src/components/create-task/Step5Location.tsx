@@ -78,23 +78,30 @@ export default function Step5Location() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-2">
-              Հասցե (ըստ ցանկության)
+              Հասցե <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               {...register('address')}
               placeholder="Օրինակ՝ Աբովյան 10"
-              className="
+              className={`
                 w-full px-4 py-3
                 bg-gray-50 dark:bg-zinc-800
-                border-2 border-transparent
-                focus:border-lime-500
-                rounded-lg
+                border-2 rounded-lg
+                ${errors.address 
+                  ? 'border-red-500' 
+                  : 'border-transparent focus:border-lime-500'
+                }
                 text-black dark:text-white
                 placeholder-gray-400 dark:placeholder-zinc-500
                 focus:outline-none
-              "
+              `}
             />
+            {errors.address && (
+              <p className="mt-2 text-sm text-red-500">
+                {errors.address.message as string}
+              </p>
+            )}
           </div>
 
           <div className="bg-gray-50 dark:bg-zinc-800 rounded-lg p-4 border border-gray-200 dark:border-zinc-700">

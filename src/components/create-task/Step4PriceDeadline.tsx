@@ -67,7 +67,7 @@ export default function Step4PriceDeadline() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-zinc-300 mb-2">
-              Բյուջե (դրամ) <span className="text-red-500">*</span>
+              Բյուջե (դրամ) {priceType === 'fixed' && <span className="text-red-500">*</span>}
             </label>
             <input
               type="number"
@@ -91,9 +91,6 @@ export default function Step4PriceDeadline() {
                 {errors.price.message as string}
               </p>
             )}
-            <p className="mt-2 text-sm text-gray-500 dark:text-zinc-500">
-              💡 Միջին գինը՝ 10,000 - 20,000 դր
-            </p>
           </div>
 
           <div>

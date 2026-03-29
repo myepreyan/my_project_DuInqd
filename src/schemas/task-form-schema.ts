@@ -16,7 +16,15 @@ export const step3Schema = z.object({
 
 export const step4Schema = z.object({
   priceType: z.enum(['fixed', 'negotiable']),
-  price: z.number().min(0, 'Գինը պետք է լինի դրական թիվ').optional(),
+  price: z.preprocess(
+    (val) => {
+      if (val === '' || val === null || val === undefined) return undefined;
+      const parsed = Number(val);
+      if (Number.isNaN(parsed)) return undefined;
+      return parsed;
+    },
+    z.number().min(0, 'Գինը պետք է լինի դրական թիվ').optional()
+  ),
   priceMin: z.number().min(0).optional(),
   priceMax: z.number().min(0).optional(),
   deadline: z.enum(['urgent', 'normal', 'flexible', 'specific']),
@@ -29,14 +37,14 @@ export const step4Schema = z.object({
     return true;
   },
   {
-    message: 'Ֆիքսված գնի դեպքում նշեք գումարը',
+    message: 'Այս դաշտը պարտադիր է',
     path: ['price'],
   }
 );
 
 export const step5Schema = z.object({
   city: z.string().min(1, 'Ընտրեք քաղաք'),
-  address: z.string().optional(),
+  address: z.string().min(1, 'Նշեք հասցեն'),
   coordinates: z.object({
     lat: z.number(),
     lng: z.number(),
