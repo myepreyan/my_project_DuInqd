@@ -1,22 +1,23 @@
+import Link from "next/link";
 import clsx from "clsx";
 import { Task } from "@/types/task";
 
 interface TaskCardProps {
   task: Task;
-  onSelect: (taskId: string) => void;
+  onSelect?: (taskId: string) => void;
 }
 
 // Format price consistently for both server and client
 function formatPrice(price: number): string {
-  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
-export default function TaskCard({ task, onSelect }: TaskCardProps) {
+export default function TaskCard({ task }: TaskCardProps) {
   const formattedPrice = formatPrice(task.price);
-  
+
   return (
-    <button
-      onClick={() => onSelect(task.id)}
+    <Link
+      href={`/task/${task.id}`}
       className={clsx(
         "w-full text-left p-4 rounded-xl",
         "bg-white dark:bg-zinc-900",
@@ -24,16 +25,17 @@ export default function TaskCard({ task, onSelect }: TaskCardProps) {
         "shadow-sm hover:shadow-md",
         "transition-all duration-200",
         "hover:scale-[1.02] active:scale-[0.98]",
-        "flex flex-col gap-3"
+        "flex flex-col gap-3",
+        "hover:border-lime-400 dark:hover:border-lime-600"
       )}
     >
       {/* Header: Title and Price */}
       <div className="flex items-start justify-between gap-3">
-        <h3 className="text-base md:text-lg font-bold text-black dark:text-white font-serif flex-1">
+        <h3 className="text-base md:text-lg font-bold text-black dark:text-white font-serif flex-1 line-clamp-2">
           {task.title}
         </h3>
-        <span className="text-lg md:text-xl font-bold text-lime-600 dark:text-lime-500 whitespace-nowrap">
-          {formattedPrice} ֏
+        <span className="text-lg md:text-xl font-bold text-lime-600 dark:text-lime-500 whitespace-nowrap shrink-0">
+          {task.priceType === "negotiable" ? "Բանակ․" : `${formattedPrice} ֏`}
         </span>
       </div>
 
@@ -63,7 +65,7 @@ export default function TaskCard({ task, onSelect }: TaskCardProps) {
         <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-zinc-500">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-3.5 w-3.5"
+            className="h-3.5 w-3.5 shrink-0"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -83,6 +85,6 @@ export default function TaskCard({ task, onSelect }: TaskCardProps) {
           {task.location}
         </div>
       )}
-    </button>
+    </Link>
   );
 }

@@ -62,9 +62,6 @@ export default function FindTaskContent({ searchQuery, isSidebarOpen, setIsSideb
     return filtered;
   }, [selectedCategories, selectedSubcategories, searchQuery]);
 
-  const handleTaskSelect = (taskId: string) => {
-    console.log("Ընտրված առաջադրանք:", taskId);
-  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -120,7 +117,7 @@ export default function FindTaskContent({ searchQuery, isSidebarOpen, setIsSideb
           {filteredTasks.length > 0 ? (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {filteredTasks.map((task) => (
-                <TaskCard key={task.id} task={task} onSelect={handleTaskSelect} />
+                <TaskCard key={task.id} task={task} />
               ))}
             </div>
           ) : (
