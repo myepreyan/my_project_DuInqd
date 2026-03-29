@@ -2,6 +2,7 @@ import RegisterForm from "@/components/auth/RegisterForm"
 import SocialLoginButtons from "@/components/auth/SocialLoginButtons"
 import Link from "next/link"
 import Image from "next/image"
+import { Suspense } from "react"
 
 export default function RegisterPage() {
   return (
@@ -26,7 +27,9 @@ export default function RegisterPage() {
             <p className="text-white/80 text-xs md:text-sm mt-2">Ստեղծեք ձեր հաշիվը</p>
           </div>
           
-          <SocialLoginButtons />
+          <Suspense fallback={<div className="text-white text-center">Loading...</div>}>
+            <SocialLoginButtons />
+          </Suspense>
           
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
